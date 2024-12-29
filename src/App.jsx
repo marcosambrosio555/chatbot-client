@@ -9,6 +9,8 @@ function App() {
 
   const text = "Olá , eu sou o Max , eu era um rei , mas o sombra veio e sem nada eu fiquei .Quero o meu reino como sempre viveu , mexe o teu corpo como a Lina e eu."
 
+  console.log(microfone.state)
+
   return (
     <main className="main">
 
@@ -31,7 +33,16 @@ function App() {
           </form>
         </div>
       </section>
+      <section>
+        <div className="container">
+          <h2>Console.log</h2>
+          <p>Listar todos erros e sucessos do console.log , mensagens vindo do speaker</p>
+          <div>
 
+            {JSON.stringify(microfone.state)}
+          </div>
+        </div>
+      </section>
       <section className='microfone'>
         <div className="container">
           <h2>Gravador de voz </h2>

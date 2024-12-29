@@ -7,7 +7,7 @@ export function useSpeaker() {
 
     window.speechSynthesis.addEventListener("voiceschanged", () => {
         SetVoicesList([...window.speechSynthesis.getVoices()])
-        console.log(voicesList)
+        //console.log(voicesList)
     })
 
     function speakText(text) {

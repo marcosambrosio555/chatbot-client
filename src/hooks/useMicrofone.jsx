@@ -3,6 +3,7 @@ import { useState } from "react"
 export function useMicrofone() {
 
     const [listining, setListining] = useState(false)
+    const [state, setState] = useState({ error: null, success: null, result: null })
 
     let text = ""
 
@@ -26,7 +27,13 @@ export function useMicrofone() {
         setListining(false)
         console.log("Desligando")
     }
-    recognition.onerror = (e) => console.log("error : ", e)
+
+    recognition.onerror = (e) => {
+        console.log("error : ", e)
+        setState({ ...state, error: e.error })
+        console.log(state)
+    }
+
     recognition.onresult = (e) => {
         text = e.results[0][0].transcript
         console.log(e)
@@ -35,6 +42,7 @@ export function useMicrofone() {
         console.log(e.results[0][0])
         console.log(e.results[0][0].transcript)
         console.log("Transcrevendo")
+        setState({ ...state, success: e, result: e.results[0][0].transcript })
     }
 
     function handleMicrofone() {
@@ -50,7 +58,8 @@ export function useMicrofone() {
         recognition,
         text,
         listining,
-        handleMicrofone
+        handleMicrofone,
+        state
     }
 
 }

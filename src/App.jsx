@@ -1,67 +1,36 @@
 import './App.css'
+import { useState, useContext } from 'react'
+
 import { useMicrofone } from './hooks/useMicrofone'
 import { useSpeaker } from './hooks/useSpeaker'
 
+import { FaRobot, FaExclamationTriangle } from 'react-icons/fa'
+import { BiArrowToBottom, BiMicrophone, BiArrowToTop } from 'react-icons/bi'
+
+import { MessagesContext } from './context/MessagesContext'
+
 function App() {
 
-  const microfone = useMicrofone()
-  const { speakText, setSelectedVoice, voicesList } = useSpeaker()
+  const [showMessages, setShowMessages] = useState(false)
 
-  const text = "Olá , eu sou o Max , eu era um rei , mas o sombra veio e sem nada eu fiquei .Quero o meu reino como sempre viveu , mexe o teu corpo como a Lina e eu."
+  const { text, handleMicrofone, listining, recognition } = useMicrofone()
+  const { command, setSelectedVoice, voicesList } = useSpeaker()
 
-  console.log(microfone.state)
+  const { messages, addMessage } = useContext(MessagesContext)
 
   return (
     <main className="main">
 
-      <section className="chatbot">
-        <div className="container">
-          <h2>Chatbot</h2>
-          <div className="messages">
-            <div className="message">
-              <span className="name">chatbot</span>
-              <span className="body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique alias enim numquam dicta veniam culpa, illum fuga est suscipit iste omnis praesentium, cupiditate vero iure laboriosam, maiores dolorem ea ratione.</span>
-            </div>
-            <div className="message me">
-              <span className="name">chatbot</span>
-              <span className="body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique alias enim numquam dicta veniam culpa, illum fuga est suscipit iste omnis praesentium, cupiditate vero iure laboriosam, maiores dolorem ea ratione.</span>
-            </div>
-          </div>
-          <form className="form">
-            <input type="text" placeholder='Digite aqui sua messagem' />
-            <button type='submit'>Enviar</button>
-          </form>
-        </div>
-      </section>
-      <section>
-        <div className="container">
-          <h2>Console.log</h2>
-          <p>Listar todos erros e sucessos do console.log , mensagens vindo do speaker</p>
-          <div>
+      <div className="container">
 
-            {JSON.stringify(microfone.state)}
-          </div>
-        </div>
-      </section>
-      <section className='microfone'>
-        <div className="container">
-          <h2>Gravador de voz </h2>
-          <div className='text-area'>
-            {microfone.text}
-          </div>
-          <div>
-            <button onClick={() => microfone.handleMicrofone()}>
-              {microfone.listining ? "Desligar microfone" : "Ligar microfone"}</button>
-          </div>
-        </div>
-      </section>
+        <div className="chatbot">
 
-      <section className="speaker">
-        <div className="container">
-          <h2>Leitor de texto</h2>
-          <div className="text">
-            {text}
+          <div className="chatbot-icon">
+            <button className={`${command.isSpeaking && "active"}`}>
+              <FaRobot />
+            </button>
           </div>
+
           <select name="voices" id="voices" onChange={(e) => {
             console.log(parseInt(e.target.value))
             setSelectedVoice(parseInt(e.target.value))
@@ -76,9 +45,54 @@ function App() {
               <option value="0">Nenhuma voz</option>
             )}
           </select>
-          <button onClick={() => speakText(text)}>Ler texto</button>
+
         </div>
-      </section>
+
+        {!recognition &&
+          <div className="error-recognition">
+            <h3>
+              <FaExclamationTriangle /> {text}
+            </h3>
+          </div>
+        }
+
+        <div>
+
+          <button className='btn-messages' onClick={() => {
+            setShowMessages(!showMessages)
+          }}>
+            {showMessages ? (<BiArrowToBottom />) : (<BiArrowToTop />)}
+          </button>
+
+          <div className={`messages ${showMessages && "show"}`}>
+            {
+
+              messages.map((message, index) => (
+
+                <div key={index} className={`message ${message.role === "user" && "me"}`}>
+                  <span className="name">{message.role === "user" ? "Me" : "Chatbot"}</span>
+                  <span className="body">{message.content}</span>
+                </div>
+
+              ))
+            }
+          </div>
+        </div>
+
+        <div className="user">
+          <button className={`btn-microfone ${listining && "active"}`}
+            onClick={() => {
+              handleMicrofone()
+              console.log("Ativar microfone")
+            }}>
+            <BiMicrophone />
+            {listining ? "Desligar microfone" : "Ligar microfone"}
+          </button>
+        </div>
+
+      </div>
+
+
 
     </main>
   )

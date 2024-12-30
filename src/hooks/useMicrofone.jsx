@@ -1,10 +1,17 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
+import { useOpenIA } from "./useOpenIA"
+
+import { MessagesContext } from '../context/MessagesContext'
+
 
 export function useMicrofone() {
 
+    const { addMessage } = useContext(MessagesContext)
+
     const [listining, setListining] = useState(false)
-    const [state, setState] = useState({ error: null, success: null, result: null })
     const [text, setText] = useState("")
+
+    const { getChatResponse } = useOpenIA()
 
     const speechRecognition = window.SpeechRecognition
         || window.webkitSpeechRecognition
@@ -15,8 +22,6 @@ export function useMicrofone() {
         setText("Speech Recognition is not found!")
         return null
     }
-
-
 
     recognition.onstart = () => {
         setListining(true)
@@ -29,33 +34,30 @@ export function useMicrofone() {
 
     recognition.onerror = (e) => {
         console.log("error : ", e)
-        setState({ ...state, error: e.error })
-        console.log(state)
     }
 
     recognition.onresult = (e) => {
         recognition.lang = "pt_BR"
-        setText(e.results[0][0].transcript)
         console.log(e.results[0][0].transcript)
         console.log("Transcrevendo")
-        setState({ ...state, success: e, result: e.results[0][0].transcript })
+        setText(e.results[0][0].transcript)
+        getChatResponse(text)
+        addMessage({
+            role: "user",
+            content: text
+        })
     }
 
     function handleMicrofone() {
-        if (!recognition) {
-            return
-        }
-        listining ? recognition.stop() :
-            recognition.start()
+        if (!recognition) return
+        listining ? recognition.stop() : recognition.start()
     }
-
 
     return {
         recognition,
         text,
         listining,
         handleMicrofone,
-        state
     }
 
 }

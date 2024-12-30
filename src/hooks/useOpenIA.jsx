@@ -12,7 +12,7 @@ export function useOpenIA() {
 
     async function getChatResponse(prompt) {
         try {
-            const res = await axios.post('http://localhost:4440/api/chat', { prompt });
+            const res = await axios.post('https://chatbot-server-e9m3.onrender.com/', { prompt });
             const data = await res.data;
             command.speakText(data.response.content);
             console.log(data.response)

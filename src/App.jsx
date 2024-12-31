@@ -13,20 +13,12 @@ import { useOpenIA } from './hooks/useOpenIA'
 function App() {
 
   const [showMessages, setShowMessages] = useState(false)
-
   const { text, handleMicrofone, listining, recognition } = useMicrofone()
   const { command, setSelectedVoice, voicesList } = useSpeaker()
-
   const { messages, addMessage } = useContext(MessagesContext)
-
   const { getChatResponse } = useOpenIA()
 
-  const [answer, setAnswer] = useState("")
-
   useEffect(() => {
-
-    console.log("Mudou")
-    console.log(text)
 
     if (text) {
       const textToRead = text
@@ -37,15 +29,10 @@ function App() {
       })
 
       getChatResponse(textToRead).then(response => {
-
         addMessage(response)
-
-        setAnswer(response.content)
-
-        console.log("Agora é para falar")
         command.speakText(response.content)
-
       })
+
     }
 
   }, [text])
@@ -102,7 +89,7 @@ function App() {
               messages.map((message, index) => (
 
                 <div key={index} className={`message ${message.role === "user" && "me"}`}>
-                  <span className="name">{message.role === "user" ? "Me" : "Chatbot"}</span>
+                  <span className="name">{message.role === "user" ? "Human" : "Chatbot"}</span>
                   <span className="body">{message.content}</span>
                 </div>
 
@@ -120,19 +107,6 @@ function App() {
             <BiMicrophone />
             {listining ? "Desligar microfone" : "Ligar microfone"}
           </button>
-          <button onClick={() => {
-            handleMicrofone()
-            console.log("Ativar microfone")
-          }}>
-            Falar
-          </button>
-        </div>
-
-        <div className="errors">
-          <div className="answer">
-            <p>Pergunta : {JSON.stringify(text)}</p>
-            <p>Resposta : {JSON.stringify(answer)}</p>
-          </div>
         </div>
 
       </div>

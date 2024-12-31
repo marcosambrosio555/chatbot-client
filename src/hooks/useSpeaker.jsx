@@ -15,7 +15,6 @@ export function useSpeaker() {
     }, [])
 
     function speakText(text) {
-        console.log(text)
         if (text) {
             const ut = new SpeechSynthesisUtterance(text)
             ut.voice = voicesList[selectedVoice]

@@ -41,11 +41,11 @@ export function useMicrofone() {
         console.log(e.results[0][0].transcript)
         console.log("Transcrevendo")
         setText(e.results[0][0].transcript)
-        getChatResponse(text)
-        addMessage({
-            role: "user",
-            content: text
-        })
+        // getChatResponse(text)
+        // addMessage({
+        //     role: "user",
+        //     content: text
+        // })
     }
 
     function handleMicrofone() {

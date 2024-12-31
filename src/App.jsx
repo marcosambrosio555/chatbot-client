@@ -33,7 +33,7 @@ function App() {
 
       addMessage({
         role: "user",
-        content: textToRead + "Texto do teste"
+        content: textToRead
       })
 
       getChatResponse(textToRead).then(response => {
@@ -43,7 +43,7 @@ function App() {
         setAnswer(response.content)
 
         console.log("Agora é para falar")
-        // command.speakText(response.content)
+        command.speakText(response.content)
 
       })
     }

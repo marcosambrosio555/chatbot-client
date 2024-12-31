@@ -12,11 +12,11 @@ export function useOpenIA() {
 
     async function getChatResponse(prompt) {
         try {
-            const res = await axios.post('https://chatbot-server-e9m3.onrender.com//api/chat', { prompt });
+            const res = await axios.post('https://chatbot-server-e9m3.onrender.com/api/chat', { prompt });
             const data = await res.data;
-            command.speakText(data.response.content);
+            //command.speakText(data.response.content);
             console.log(data.response)
-            addMessage(data.response)
+            //addMessage(data.response)
             return data.response;
         } catch (error) {
             console.error('Erro:', error);

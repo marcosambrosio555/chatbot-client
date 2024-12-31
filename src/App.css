@@ -77,7 +77,6 @@ body {
     background-color: transparent;
     font-size: 6rem;
     transition: .4s ease-out;
-    border:1px solid red;
 }
 
 .chatbot-icon button.active {

@@ -1,22 +1,20 @@
 import axios from 'axios';
-import { useSpeaker } from './useSpeaker';
+// import { useSpeaker } from './useSpeaker';
 
-import { MessagesContext } from '../context/MessagesContext'
-import { useContext } from 'react';
+// import { MessagesContext } from '../context/MessagesContext'
+// import { useContext } from 'react';
 
 export function useOpenIA() {
 
-    const { addMessage } = useContext(MessagesContext)
+    // const { addMessage } = useContext(MessagesContext)
 
-    const { command } = useSpeaker()
+    // const { command } = useSpeaker()
 
     async function getChatResponse(prompt) {
         try {
             const res = await axios.post('https://chatbot-server-e9m3.onrender.com/api/chat', { prompt });
             const data = await res.data;
-            //command.speakText(data.response.content);
             console.log(data.response)
-            //addMessage(data.response)
             return data.response;
         } catch (error) {
             console.error('Erro:', error);

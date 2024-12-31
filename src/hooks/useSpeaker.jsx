@@ -2,22 +2,27 @@ import { useEffect, useState } from "react"
 
 export function useSpeaker() {
 
-    const [voicesList, SetVoicesList] = useState([]);
+    const [voicesList, setVoicesList] = useState([]);
     const [selectedVoice, setSelectedVoice] = useState(0)
     const [isSpeaking, setIsSpeaking] = useState(false)
 
     window.speechSynthesis.addEventListener("voiceschanged", () => {
-        SetVoicesList([...window.speechSynthesis.getVoices()])
+        setVoicesList([...window.speechSynthesis.getVoices()])
     })
 
     useEffect(() => {
-        SetVoicesList([...window.speechSynthesis.getVoices()])
+        setVoicesList([...window.speechSynthesis.getVoices()])
     }, [])
+
+    function changeVoice(voice) {
+        setSelectedVoice(voice)
+    }
 
     function speakText(text) {
         if (text) {
             const ut = new SpeechSynthesisUtterance(text)
             ut.voice = voicesList[selectedVoice]
+            console.log(ut.voice)
             window.speechSynthesis.speak(ut)
         }
     }
@@ -46,7 +51,7 @@ export function useSpeaker() {
     return {
         voicesList,
         selectedVoice,
-        setSelectedVoice,
+        changeVoice,
         command: {
             speakText,
             stopSpeak,

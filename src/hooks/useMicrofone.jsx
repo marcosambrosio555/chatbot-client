@@ -1,17 +1,15 @@
-import { useState, useContext } from "react"
-import { useOpenIA } from "./useOpenIA"
-
-import { MessagesContext } from '../context/MessagesContext'
-
+import { useState } from "react"
+// import { useOpenIA } from "./useOpenIA"
+// import { MessagesContext } from '../context/MessagesContext'
 
 export function useMicrofone() {
 
-    const { addMessage } = useContext(MessagesContext)
+    // const { addMessage } = useContext(MessagesContext)
 
     const [listining, setListining] = useState(false)
     const [text, setText] = useState("")
 
-    const { getChatResponse } = useOpenIA()
+    // const { getChatResponse } = useOpenIA()
 
     const speechRecognition = window.SpeechRecognition
         || window.webkitSpeechRecognition
@@ -41,11 +39,6 @@ export function useMicrofone() {
         console.log(e.results[0][0].transcript)
         console.log("Transcrevendo")
         setText(e.results[0][0].transcript)
-        // getChatResponse(text)
-        // addMessage({
-        //     role: "user",
-        //     content: text
-        // })
     }
 
     function handleMicrofone() {

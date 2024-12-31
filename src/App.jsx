@@ -1,34 +1,33 @@
 import './App.css'
 import { useState, useContext, useEffect } from 'react'
 
-import { useMicrofone } from './hooks/useMicrofone'
-import { useSpeaker } from './hooks/useSpeaker'
-
 import { FaRobot, FaExclamationTriangle } from 'react-icons/fa'
 import { BiArrowToBottom, BiMicrophone, BiArrowToTop } from 'react-icons/bi'
 
-import { MessagesContext } from './context/MessagesContext'
+import { useMicrofone } from './hooks/useMicrofone'
+import { useSpeaker } from './hooks/useSpeaker'
 import { useOpenIA } from './hooks/useOpenIA'
+
+import { MessagesContext } from './context/MessagesContext'
 
 function App() {
 
   const [showMessages, setShowMessages] = useState(false)
   const { text, handleMicrofone, listining, recognition } = useMicrofone()
-  const { command, setSelectedVoice, voicesList } = useSpeaker()
-  const { messages, addMessage } = useContext(MessagesContext)
+  const { command, changeVoice, voicesList } = useSpeaker()
   const { getChatResponse } = useOpenIA()
+  const { messages, addMessage } = useContext(MessagesContext)
+
+  const [answer, setAnswer] = useState("")
 
   useEffect(() => {
 
     if (text) {
-      const textToRead = text
 
-      addMessage({
-        role: "user",
-        content: textToRead
-      })
+      addMessage({ role: "user", content: text })
 
-      getChatResponse(textToRead).then(response => {
+      getChatResponse(text).then(response => {
+        setAnswer(response.content)
         addMessage(response)
         command.speakText(response.content)
       })
@@ -37,8 +36,33 @@ function App() {
 
   }, [text])
 
+  // async function say(text) {
+
+  //   addMessage({ role: "user", content: text })
+
+  //   const response = await getResponse(text)
+
+  //   setAnswer(response.content)
+  //   addMessage({ role: "assistent", content: response.content })
+  //   command.speakText(response.content)
+
+  // }
+
+  // function getResponse() {
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       resolve(
+  //         {
+  //           role: "assistent",
+  //           content: "Mas o sombra veio e sem nada ei fiquei"
+  //         }
+  //       )
+  //     }, 4000)
+  //   })
+  // }
+
   return (
-    <main className="main">
+    <main className="main" translate='no'>
 
       <div className="container">
 
@@ -51,8 +75,7 @@ function App() {
           </div>
 
           <select name="voices" id="voices" onChange={(e) => {
-            console.log(parseInt(e.target.value))
-            setSelectedVoice(parseInt(e.target.value))
+            changeVoice(parseInt(e.target.value))
           }}>
             {voicesList.length ? (
               voicesList.map((voice, index) => (
@@ -107,6 +130,20 @@ function App() {
             <BiMicrophone />
             {listining ? "Desligar microfone" : "Ligar microfone"}
           </button>
+        </div>
+
+        <div className="errors">
+          <div className="block">
+            Mensagens : {JSON.stringify(messages)}
+          </div>
+          <div className="block">
+            Pergunta : {JSON.stringify(text)}
+          </div>
+          <div className="block">
+            Resposta : {JSON.stringify(answer)}
+          </div>
+          <div className="block"></div>
+          <div className="block"></div>
         </div>
 
       </div>

@@ -22,6 +22,9 @@ export function useSpeaker() {
         if (text) {
             const ut = new SpeechSynthesisUtterance(text)
             ut.voice = voicesList[selectedVoice]
+            console.log(voicesList)
+            console.log(selectedVoice)
+            console.log(voicesList[selectedVoice])
             console.log(ut.voice)
             window.speechSynthesis.speak(ut)
         }

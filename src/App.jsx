@@ -18,8 +18,6 @@ function App() {
   const { getChatResponse } = useOpenIA()
   const { messages, addMessage } = useContext(MessagesContext)
 
-  const [answer, setAnswer] = useState("")
-
   useEffect(() => {
 
     if (text) {
@@ -27,7 +25,6 @@ function App() {
       addMessage({ role: "user", content: text })
 
       getChatResponse(text).then(response => {
-        setAnswer(response.content)
         addMessage(response)
         command.speakText(response.content)
       })
@@ -35,31 +32,6 @@ function App() {
     }
 
   }, [text])
-
-  // async function say(text) {
-
-  //   addMessage({ role: "user", content: text })
-
-  //   const response = await getResponse(text)
-
-  //   setAnswer(response.content)
-  //   addMessage({ role: "assistent", content: response.content })
-  //   command.speakText(response.content)
-
-  // }
-
-  // function getResponse() {
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       resolve(
-  //         {
-  //           role: "assistent",
-  //           content: "Mas o sombra veio e sem nada ei fiquei"
-  //         }
-  //       )
-  //     }, 4000)
-  //   })
-  // }
 
   return (
     <main className="main" translate='no'>
@@ -130,20 +102,6 @@ function App() {
             <BiMicrophone />
             {listining ? "Desligar microfone" : "Ligar microfone"}
           </button>
-        </div>
-
-        <div className="errors">
-          <div className="block">
-            Mensagens : {JSON.stringify(messages)}
-          </div>
-          <div className="block">
-            Pergunta : {JSON.stringify(text)}
-          </div>
-          <div className="block">
-            Resposta : {JSON.stringify(answer)}
-          </div>
-          <div className="block"></div>
-          <div className="block"></div>
         </div>
 
       </div>

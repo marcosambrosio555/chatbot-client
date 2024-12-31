@@ -1,5 +1,5 @@
 import './App.css'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 
 import { useMicrofone } from './hooks/useMicrofone'
 import { useSpeaker } from './hooks/useSpeaker'
@@ -8,6 +8,7 @@ import { FaRobot, FaExclamationTriangle } from 'react-icons/fa'
 import { BiArrowToBottom, BiMicrophone, BiArrowToTop } from 'react-icons/bi'
 
 import { MessagesContext } from './context/MessagesContext'
+import { useOpenIA } from './hooks/useOpenIA'
 
 function App() {
 
@@ -17,6 +18,37 @@ function App() {
   const { command, setSelectedVoice, voicesList } = useSpeaker()
 
   const { messages, addMessage } = useContext(MessagesContext)
+
+  const { getChatResponse } = useOpenIA()
+
+  const [answer, setAnswer] = useState("")
+
+  useEffect(() => {
+
+    console.log("Mudou")
+    console.log(text)
+
+    if (text) {
+      const textToRead = text
+
+      addMessage({
+        role: "user",
+        content: textToRead + "Texto do teste"
+      })
+
+      getChatResponse(textToRead).then(response => {
+
+        addMessage(response)
+
+        setAnswer(response.content)
+
+        console.log("Agora é para falar")
+        // command.speakText(response.content)
+
+      })
+    }
+
+  }, [text])
 
   return (
     <main className="main">
@@ -88,12 +120,22 @@ function App() {
             <BiMicrophone />
             {listining ? "Desligar microfone" : "Ligar microfone"}
           </button>
+          <button onClick={() => {
+            handleMicrofone()
+            console.log("Ativar microfone")
+          }}>
+            Falar
+          </button>
+        </div>
+
+        <div className="errors">
+          <div className="answer">
+            <p>Pergunta : {JSON.stringify(text)}</p>
+            <p>Resposta : {JSON.stringify(answer)}</p>
+          </div>
         </div>
 
       </div>
-
-
-
     </main>
   )
 
